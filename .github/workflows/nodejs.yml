@@ -1,0 +1,39 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22.x] # Make sure Node.js 22 is installed on your self-hosted runner
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Load .env from GitHub secret
+        run: |
+          touch .env
+          echo "${{ secrets.PROD_ENV_FILE }}" > .env
+
+      - name: Restart or start PM2 services
+        run: |
+          pm2 startOrRestart pm2.config.js || pm2 start pm2.config.js
