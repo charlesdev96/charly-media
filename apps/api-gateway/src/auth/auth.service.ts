@@ -1,8 +1,8 @@
 import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { nats } from "../../../lib/constants/nats-clients.constant";
 import { ClientProxy } from "@nestjs/microservices";
-import { LoginDto, RegisterDto } from "./dto/auth.dto";
 import { firstValueFrom } from "rxjs";
+import { RegisterDto, LoginDto } from "../../../lib/dtos/user/create-user.dto";
 
 @Injectable()
 export class AuthService implements OnApplicationBootstrap {

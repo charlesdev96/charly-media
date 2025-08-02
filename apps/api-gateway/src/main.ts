@@ -4,9 +4,15 @@ import { ValidationPipe } from "@nestjs/common";
 import { AllExceptionsFilter } from "./common/filters/globalErrorFilter.filter";
 import { TimeOutInterceptor } from "./common/interceptors/timeout.interceptor";
 import { MicroserviceResponseInterceptor } from "./common/interceptors/microservice-response.interceptor";
+import { RedisIoAdapter } from "./socket.io/redis/redis.io.adapter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({ origin: "*" });
+  // Set up Redis Socket.IO Adapter
+  const redisIoAdapter = new RedisIoAdapter(app);
+  await redisIoAdapter.connectToRedis();
+  app.useWebSocketAdapter(redisIoAdapter);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -16,10 +22,14 @@ async function bootstrap() {
       disableErrorMessages: false,
     }),
   );
+  app.setGlobalPrefix("api/v1");
+  const PORT = process.env.PORT ?? 3000;
   //global error catch
   app.useGlobalInterceptors(new MicroserviceResponseInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new TimeOutInterceptor());
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(PORT, () => {
+    console.log(`Microservice is listening on port ${PORT}`);
+  });
 }
 void bootstrap();

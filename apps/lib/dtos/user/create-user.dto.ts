@@ -1,3 +1,4 @@
+import { UserRole } from "../../enum/user.enum";
 import {
   IsEmail,
   IsNotEmpty,
@@ -5,7 +6,6 @@ import {
   IsString,
   MinLength,
 } from "class-validator";
-import { UserRole } from "../../../../lib/enum/user.enum";
 
 export class RegisterDto {
   @IsEmail()

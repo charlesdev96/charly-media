@@ -1,12 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "../../../../apps/auth-microservice/src/auth/entity/create-user.entity";
 import { PaginatedQueryDto } from "../../../lib/dtos/paginated-query.dto";
 import {
   PaginatedResponseData,
   ResponseData,
 } from "../../../lib/interface/response.interface";
 import { Repository } from "typeorm";
+import { User } from "../../../lib/entities/create-user.entity";
+import { SearchUsersDto } from "../../../../apps/lib/dtos/user";
 
 @Injectable()
 export class UserMicroserviceService {
@@ -42,7 +43,13 @@ export class UserMicroserviceService {
     const skip = (page - 1) * limit;
     const queryBuilder = this.userRepository
       .createQueryBuilder("user")
-      .select(["user.name", "user.email", "user.role", "user.createdAt"])
+      .select([
+        "user.userId",
+        "user.name",
+        "user.email",
+        "user.role",
+        "user.createdAt",
+      ])
       .orderBy("user.createdAt", "DESC")
       .skip(skip)
       .take(limit);
@@ -52,7 +59,6 @@ export class UserMicroserviceService {
     const responseResult: PaginatedResponseData<User> = {
       success: true,
       message: "List of users",
-      data: items,
       meta: {
         currentPage: page,
         itemsPerPage: limit,
@@ -61,8 +67,46 @@ export class UserMicroserviceService {
         hasPreviousPage: page > 1,
         hasNextPage: page < totalPages,
       },
+      data: items,
     };
 
+    return responseResult;
+  }
+
+  async searchUsers(
+    query: SearchUsersDto,
+  ): Promise<PaginatedResponseData<User>> {
+    const { limit = 10, page = 1, search } = query;
+    const skip = (page - 1) * limit;
+    const queryBuilder = this.userRepository
+      .createQueryBuilder("user")
+      .select([
+        "user.userId",
+        "user.name",
+        "user.email",
+        "user.role",
+        "user.createdAt",
+      ])
+      .where("user.name ILIKE :search", { search: `%${search}%` })
+      .orWhere("user.email ILIKE :search", { search: `%${search}%` })
+      .orderBy("user.createdAt", "DESC")
+      .skip(skip)
+      .take(limit);
+    const [items, totalItems] = await queryBuilder.getManyAndCount();
+    const totalPages = Math.ceil(totalItems / limit);
+    const responseResult: PaginatedResponseData<User> = {
+      success: true,
+      message: "Filtered list of users",
+      meta: {
+        currentPage: page,
+        itemsPerPage: limit,
+        totalItems: totalItems,
+        totalPages: totalPages,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < totalPages,
+      },
+      data: items,
+    };
     return responseResult;
   }
 }

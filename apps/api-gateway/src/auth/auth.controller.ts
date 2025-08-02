@@ -7,10 +7,10 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { LoginDto, RegisterDto } from "./dto/auth.dto";
 import { ResponseData } from "../../../lib/interface/response.interface";
 import { minutes, Throttle } from "@nestjs/throttler";
 import { LoginThrottlerMessage } from "./guards/login.throttler.guard";
+import { RegisterDto, LoginDto } from "../../../lib/dtos/user/create-user.dto";
 
 @Controller("auth")
 export class AuthController {

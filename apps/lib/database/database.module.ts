@@ -1,7 +1,15 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../../auth-microservice/src/auth/entity/create-user.entity";
+import {
+  User,
+  Post,
+  Comment,
+  Group,
+  Chat,
+  GroupChat,
+  GroupMember,
+} from "../entities";
 
 @Module({
   imports: [
@@ -16,7 +24,7 @@ import { User } from "../../auth-microservice/src/auth/entity/create-user.entity
         username: config.get<string>("DATABASE_USER"),
         password: config.get<string>("DATABASE_PASSWORD"),
         database: config.get<string>("DATABASE_NAME"),
-        entities: [User], // add your entities here
+        entities: [User, Post, Comment, Group, Chat, GroupChat, GroupMember],
         synchronize: true,
         ssl: {
           rejectUnauthorized: false,

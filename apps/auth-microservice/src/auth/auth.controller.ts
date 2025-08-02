@@ -1,9 +1,9 @@
 import { Controller } from "@nestjs/common";
 import { AuthMicroserviceService } from "./auth.service";
 import { MessagePattern, Payload } from "@nestjs/microservices";
-import { LoginDto, RegisterDto } from "./dto/create-user.dto";
+import { LoginDto, RegisterDto } from "../../../lib/dtos/user/create-user.dto";
 import { ResponseData } from "../../../lib/interface/response.interface";
-import { User } from "./entity/create-user.entity";
+import { User } from "../../../lib/entities/create-user.entity";
 
 @Controller()
 export class AuthMicroserviceController {
@@ -18,7 +18,6 @@ export class AuthMicroserviceController {
 
   @MessagePattern({ cmd: "login-user" })
   async login(@Payload() loginDto: LoginDto): Promise<ResponseData> {
-    console.log("loging endpoint called");
     return await this.authMicroService.loginUser(loginDto);
   }
 

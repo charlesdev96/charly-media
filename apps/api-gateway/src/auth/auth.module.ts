@@ -6,8 +6,8 @@ import { RolesGuards } from "./guards";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../../../auth-microservice/src/auth/entity/create-user.entity";
 import { NatsClientModule } from "../../../lib/Nats-Client/nats-client.module";
+import { User } from "../../../lib/entities/create-user.entity";
 
 @Module({
   imports: [

@@ -1,12 +1,13 @@
 import { Controller } from "@nestjs/common";
 import { UserMicroserviceService } from "./user.service";
 import { MessagePattern, Payload } from "@nestjs/microservices";
-import { User } from "../../../../apps/auth-microservice/src/auth/entity/create-user.entity";
 import {
   PaginatedResponseData,
   ResponseData,
 } from "../../../lib/interface/response.interface";
 import { PaginatedQueryDto } from "../../../lib/dtos/paginated-query.dto";
+import { User } from "../../../lib/entities/create-user.entity";
+import { SearchUsersDto } from "../../../../apps/lib/dtos/user";
 
 @Controller()
 export class UserMicroserviceController {
@@ -22,5 +23,12 @@ export class UserMicroserviceController {
     @Payload() query: PaginatedQueryDto,
   ): Promise<PaginatedResponseData<User>> {
     return this.userService.getAllUsers(query);
+  }
+
+  @MessagePattern({ cmd: "search-user" })
+  async searchUser(
+    @Payload() query: SearchUsersDto,
+  ): Promise<PaginatedResponseData<User>> {
+    return this.userService.searchUsers(query);
   }
 }

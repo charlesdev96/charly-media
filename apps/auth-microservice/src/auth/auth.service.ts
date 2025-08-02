@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "./entity/create-user.entity";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
-import { LoginDto, RegisterDto } from "./dto/create-user.dto";
+import { LoginDto, RegisterDto } from "../../../lib/dtos/user/create-user.dto";
 import * as bcrypt from "bcryptjs";
 import { ResponseData } from "../../../lib/interface/response.interface";
 import { Payload } from "../../../lib/interface/payload.interface";
+import { User } from "../../../lib/entities/create-user.entity";
 
 @Injectable()
 export class AuthMicroserviceService {

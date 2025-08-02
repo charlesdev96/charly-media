@@ -1,9 +1,10 @@
 import { Inject, Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { User } from "../../../../apps/auth-microservice/src/auth/entity/create-user.entity";
 import { PaginatedQueryDto } from "../../../lib/dtos/paginated-query.dto";
 import { firstValueFrom } from "rxjs";
 import { nats } from "../../../lib/constants/nats-clients.constant";
+import { User } from "../../../lib/entities/create-user.entity";
+import { SearchUsersDto } from "../../../../apps/lib/dtos/user";
 
 @Injectable()
 export class UserService implements OnApplicationBootstrap {
@@ -24,6 +25,13 @@ export class UserService implements OnApplicationBootstrap {
   async allUsers(query: PaginatedQueryDto) {
     const response = await firstValueFrom(
       this.natsClient.send({ cmd: "all-users" }, query),
+    );
+    return response;
+  }
+
+  async searchUsers(query: SearchUsersDto) {
+    const response = await firstValueFrom(
+      this.natsClient.send({ cmd: "search-user" }, query),
     );
     return response;
   }
