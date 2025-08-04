@@ -70,24 +70,6 @@ All services connect to a central **NATS server**, and communication is done usi
 - `@MessagePattern()` to listen for events
 - `ClientProxy` for emitting messages
 
-Sample config:
-
-````ts
-ClientsModule.register([
-  {
-    name: 'USER_SERVICE',
-    transport: Transport.NATS,
-    options: {
-      servers: ['nats://nats:4222'],
-    },
-  },
-])
-
-👨‍💻 Author
-Charles Ogonnaya
-Backend Developer | Real-time Systems | NestJS & Microservices
-GitHub: charlesdev96
-
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -119,7 +101,7 @@ GitHub: charlesdev96
 
 ```bash
 $ npm install
-````
+```
 
 ## Compile and run the project
 
