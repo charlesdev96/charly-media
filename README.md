@@ -1,3 +1,93 @@
+# CharlyMedia 🗨️
+
+# 🚀 CharlyMedia — Microservices-Based Real-Time Social App (NestJS + Socket.IO + NATS)
+
+**CharlyMedia** is a real-time, microservices-powered social media platform where users can create or join groups, post content, comment, and chat live. It is built with **NestJS**, uses **Socket.IO** for WebSocket-based messaging, and is deployed on an **AWS EC2** instance.
+
+This project follows a **microservice architecture** pattern with **four independent services**, all communicating through a **NATS message broker** for efficient event-driven communication:
+
+- Auth Service → Handles registration, login, and JWT authentication
+- User Service → Manages user profiles and group membership
+- Posts Service → Manages group-based posts and threaded comments
+- Chat Service → Handles real-time 1:1 and group messaging using Socket.IO
+
+Each service is **modular**, **independently deployable**, and communicates via **NestJS's NATS-based transport strategy** using `ClientProxy` and `MessagePattern`.
+
+---
+
+## ⚙️ Tech Stack
+
+- **Backend Framework**: NestJS (Monorepo with Microservices)
+- **Message Broker**: **NATS** for service-to-service messaging
+- **Real-time**: Socket.IO via Chat service
+- **Database**: PostgreSQL (via TypeORM)
+- **Authentication**: JWT-based Auth (via Auth service)
+- **Deployment**: Dockerized with Docker Compose on **AWS EC2**
+- **Reverse Proxy**: NGINX
+
+# start docker
+
+docker compose up --build -d
+
+# If updated
+
+docker compose down && docker compose up -d --build
+
+---
+
+## 📌 Key Features
+
+### 🔐 Auth Service
+
+- JWT registration/login
+- Access token generation
+- Global guards for route protection
+
+### 👤 User Service
+
+- Create/update user profiles
+- Group membership management
+- User lookup by ID or email
+
+### 📝 Posts Service
+
+- Create, update, delete posts
+- Threaded comments per post
+- Group-based feed organization
+
+### 💬 Chat Service
+
+- Socket.IO WebSocket Gateway
+- Real-time group and private chat
+- Typing indicators and presence tracking
+
+---
+
+## 🔗 NATS Communication
+
+All services connect to a central **NATS server**, and communication is done using:
+
+- `@MessagePattern()` to listen for events
+- `ClientProxy` for emitting messages
+
+Sample config:
+
+````ts
+ClientsModule.register([
+  {
+    name: 'USER_SERVICE',
+    transport: Transport.NATS,
+    options: {
+      servers: ['nats://nats:4222'],
+    },
+  },
+])
+
+👨‍💻 Author
+Charles Ogonnaya
+Backend Developer | Real-time Systems | NestJS & Microservices
+GitHub: charlesdev96
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -29,7 +119,7 @@
 
 ```bash
 $ npm install
-```
+````
 
 ## Compile and run the project
 
